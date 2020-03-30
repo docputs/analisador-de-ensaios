@@ -1,0 +1,57 @@
+<Button>
+
+    background_color: 1, 0, 0, 1
+    size_hint: 0.8, 0.1
+
+<Janela>
+
+    label: label
+    title: 'Aviso'
+    size_hint: None, None
+    size: 250, 200
+
+    GridLayout:
+
+        rows: 2
+
+        Label:
+            id: label
+
+        Button:
+            text: 'OK'
+            size_hint: 0.7, 0.6
+            on_release: root.dismiss()
+
+
+
+<Home>
+
+    texto: texto
+
+    Label:
+        text: '1) Cole a lista de ensaio    2) Aperte ANALISAR'
+        size_hint: 0.8, 0.1
+        pos_hint: {'x': 0.1, 'top': 1}
+
+    TextInput:
+        id: texto
+        size_hint: 0.8, 0.5
+        pos_hint: {'x': 0.1, 'y': 0.4}
+        focus: True
+
+    Button:
+        text: 'COLAR'
+        pos_hint: {'x': 0.1, 'y': 0.27}
+        on_release: root.botao_colar()
+
+    Button:
+        text: 'ANALISAR'
+        pos_hint: {'x': 0.1, 'y': 0.15}
+        on_release: root.botao_analisar()
+
+    Button:
+        text: 'COPIAR'
+        pos_hint: {'x': 0.1, 'y': 0.03}
+        on_release: root.botao_copiar()
+
+
