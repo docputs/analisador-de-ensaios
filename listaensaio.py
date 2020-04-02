@@ -21,10 +21,10 @@ class ListaEnsaio:
         self.cabecalho = None
         self.lista_log = list()
 
-    def lista_apelidos(self):
-        return self.lista_apelidos
-
     def trata_lista(self):
+        if self.apelidos:
+            lista_apelidos = TrataApelidos.tratar_apelidos()
+
         lista = self.lista.split('\n')
         self.data = lista[0].split()[::-1][0]  # extrai a data do ensaio
         lista = lista[3:]  # remove as duas primeiras linhas da lista (ENSAIO dd/mm \n tema: cores)
@@ -35,30 +35,53 @@ class ListaEnsaio:
             if len(pessoa.split()) == 3:
                 # se está formatado corretamente (nome, emoji, instrumento), str nome recebe nome
                 nome = pessoa.split()[0]
+
             elif len(pessoa.split()) == 4:
                 # se possui 4 valores (nome, nome2, emoji, instrumento) ou (nome, emoji, emoji, instrumento)
                 if ('h' or 'H' or 'atras') in pessoa.split()[3]:
                     lista[pos] = lista[pos].split()[:3]  # remove o último valor da pessoa
                     lista[pos] = ' '.join(lista[pos])  # junta a lista novamente
-                nome = pessoa.split()[0] + ' ' + pessoa.split()[1]  # junta o primeiro com o segundo nome
+                    nome = pessoa.split()[0]
+                else:
+                    nome = pessoa.split()[0] + ' ' + pessoa.split()[1]  # junta o primeiro com o segundo nome
+
             elif len(pessoa.split()) == 5:
                 # se possui 5 valores (nome, nome2, emoji, emoji, instrumento)
                 if ('h' or 'H' or 'atras') in pessoa.split()[4]:
                     lista[pos] = lista[pos].split()[:4]
                     lista[pos] = ' '.join(lista[pos])
                 nome = pessoa.split()[0] + ' ' + pessoa.split()[1]
+
             else:
                 self.lista_log.append(f'Erro em "{pessoa}"')  # adiciona erro ao log
-                nome = ''
+                nome = 'Erro'
 
             if self.apelidos:
-                lista_apelidos = TrataApelidos.tratar_apelidos()
+                # funciona se 'apelidos' for True
                 for apelido in lista_apelidos:
-                    if nome in apelido.apelidos:
-                        lista[pos] = lista[pos].title().replace(nome, apelido.nome)
+                    if nome == 'Erro':
+                        break
+
+                    print(f'{nome.title()} -> {apelido.apelidos}')
+
+                    if nome.title() in apelido.apelidos:
+                        lista[pos] = lista[pos].title().replace(nome.title(), apelido.nome)
                         break
 
         self.lista = lista
+        print(self.lista)
 
         if len(self.lista_log) == 0:
             self.lista_log.append('Lista analisada com sucesso')
+
+
+'''
+ENSAIO 17/02
+tema cores
+
+joao - caixa
+didi - chocalho
+ju s - primeira
+davi-- tamborim
+gui - agogo (18h)
+'''

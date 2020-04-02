@@ -20,6 +20,7 @@ class Home(FloatLayout):
         else:
             Analisador.analisa_ensaio(lista.lista)
             quantidade = Analisador.mostra_infos()
+            print(quantidade)
             lista_quantidade = '\n'.join(quantidade)
             self.texto.text = f'{lista.presentes} pessoas na lista\n\n{lista_quantidade}'
             self.janela_popup(lista.lista_log)
