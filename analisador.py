@@ -1,41 +1,54 @@
 class Analisador:
-    naipes = {'caixa': [['caixa', 'cx', 'kxa', 'kx'], 0],
-              'chocalho': [['choc', 'chocs', 'chocalho'], 0],
-              'agogo': [['agogo', 'agg'], 0],
-              'ripa': [['ripa', 'rp', 'repique', 'repinique', 'ripik'], 0],
-              'terceira': [['3', '3ª', 'terças', 'terça', 'terceira'], 0],
-              'primeira': [['primeira', '1ª', '1'], 0],
-              'segunda': [['segunda,' '2', '2ª'], 0],
-              'xequere': [['xequere', 'xqr'], 0],
-              'tamborim': [['tamborim', 'tambo'], 0]}
-    contador = 0
+    def __init__(self):
+        self.naipes = {'caixa': [['caixa', 'cx', 'kxa', 'kx'], 0],
+                       'chocalho': [['choc', 'chocs', 'chocalho'], 0],
+                       'agogo': [['agogo', 'agg'], 0],
+                       'ripa': [['ripa', 'rp', 'repique', 'repinique', 'ripik'], 0],
+                       'terceira': [['3', '3ª', 'terças', 'terça', 'terceira'], 0],
+                       'primeira': [['primeira', '1ª', '1'], 0],
+                       'segunda': [['segunda,' '2', '2ª'], 0],
+                       'xequere': [['xequere', 'xqr'], 0],
+                       'tamborim': [['tamborim', 'tambo'], 0]}
+        self.contador = 0
+        self.log = list()
 
-    @classmethod
-    def checa_instrumento(cls, naipe):
-        for np, nomes in cls.naipes.items():
-            if naipe in nomes[0]:
-                cls.naipes[np][1] += 1
+    def checa_instrumento(self, instrumento):
+        for naipe, instrumentos in self.naipes.items():
+            self.log.append(f'Procurando {instrumento} em {instrumentos[0]}')
+
+            if instrumento in instrumentos[0]:
+                self.log.append(f'Encontrei {instrumento}!')
+
+                # se o instrumento (primeiro item da lista invertida) estiver na lista de instrumentos, contador += 1
+                self.naipes[naipe][1] += 1
                 break
 
-    @classmethod
-    def analisa_ensaio(cls, lista):
+    def analisa_ensaio(self, lista):
+        self.log.append('INICIALIZANDO ANÁLISE DE INSTRUMENTOS...')
         lista_ensaio = list()
+
         for c in lista:
             lista_ensaio.append(c.split())
-        for linha in lista_ensaio:
-            try:
-                for instrumento in cls.naipes.values():
-                    if linha[::-1][0].lower() in instrumento[0]:
-                        cls.checa_instrumento(linha[::-1][0].lower())
-                        break
-            except IndexError:
-                print(f'\033[31mErro na linha {linha}\033[m')
-            finally:
-                cls.contador += 1
 
-    @classmethod
-    def mostra_infos(cls):
+        for linha in lista_ensaio:
+            self.log.append(f'Linha: {linha}')
+
+            try:
+                self.checa_instrumento(linha[::-1][0].lower())
+
+            except IndexError:
+                self.log.append(f'Erro: {linha}')
+
+            finally:
+                self.contador += 1
+
+    def mostra_infos(self):
         lista = set()
-        for naipe, num in cls.naipes.items():
-            lista.add(f'{naipe}: {num[1]}')
+
+        for naipe, num in self.naipes.items():
+            if num[1] > 0:  # se o instrumento tiver contador > 0
+                lista.add(f'{naipe}: {num[1]}')
+
+        for linha in self.log:
+            print(linha)
         return lista

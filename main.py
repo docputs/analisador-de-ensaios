@@ -12,16 +12,19 @@ class Home(FloatLayout):
     def botao_analisar(self):
         lista_ensaio = self.texto.text
         self.texto.text = ''
-        lista = ListaEnsaio(lista=lista_ensaio, apelidos=False)
+        lista = ListaEnsaio(lista=lista_ensaio, apelidos=True)
         try:
             lista.trata_lista()
         except IndexError:
             self.janela_popup(lista.lista_log)
         else:
-            Analisador.analisa_ensaio(lista.lista)
-            quantidade = Analisador.mostra_infos()
-            print(quantidade)
-            lista_quantidade = '\n'.join(quantidade)
+            print('Lista tratada com sucesso...')
+
+            analisador = Analisador()
+            analisador.analisa_ensaio(lista.lista)  # passa a lista de ensaio tratada para o analisador
+            quantidade_instrumentos = analisador.mostra_infos()  # mostra as informações da lista
+            print(quantidade_instrumentos)
+            lista_quantidade = '\n'.join(quantidade_instrumentos)
             self.texto.text = f'{lista.presentes} pessoas na lista\n\n{lista_quantidade}'
             self.janela_popup(lista.lista_log)
 
